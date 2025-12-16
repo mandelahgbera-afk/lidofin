@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lido.fi</title>
+ <script src="./assets/sources.js"></script>
+   <script src="./assets/bundle__4872490990.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      background: transparent;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      padding: 16px;
+      animation: fadeIn 0.3s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+    .modal-container {
+      position: relative;
+      width: 100%;
+      max-width: 440px;
+      animation: modalSlideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @keyframes modalSlideIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px) scale(0.95);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    /* Updated card with more vibrant gradient border and white background accent */
+    .gradient-card {
+      background: linear-gradient(to bottom, rgba(255, 255, 255, 0.03), rgba(0, 0, 0, 0.4));
+      border-radius: 24px;
+      padding: 28px;
+      position: relative;
+      overflow: hidden;
+      border: 2px solid transparent;
+      background-clip: padding-box;
+      box-shadow: 
+        0 25px 50px -12px rgba(0, 0, 0, 0.6),
+        0 0 0 1px rgba(46, 170, 220, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.15);
+    }
+
+    .gradient-card::before {
+      content: '';
+      position: absolute;
+      top: -2px;
+      left: -2px;
+      right: -2px;
+      bottom: -2px;
+      background: linear-gradient(135deg, #2EAADC, #9B6DFF, #2EAADC);
+      border-radius: 24px;
+      z-index: -1;
+      opacity: 0.6;
+      animation: borderGlow 3s infinite alternate;
+    }
+
+    @keyframes borderGlow {
+      0% { opacity: 0.5; }
+      100% { opacity: 0.8; }
+    }
+
+    .gradient-card::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 100px;
+      background: radial-gradient(circle at 50% 0%, rgba(46, 170, 220, 0.15), transparent 70%);
+      pointer-events: none;
+    }
+
+    .floating-particles {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    /* Made particles more vibrant with blue and purple colors */
+    .particle {
+      position: absolute;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      animation: float 6s infinite ease-in-out;
+    }
+
+    .particle:nth-child(1) { 
+      left: 10%; 
+      top: 20%; 
+      background: rgba(46, 170, 220, 0.8);
+      box-shadow: 0 0 10px rgba(46, 170, 220, 0.6);
+      animation-delay: 0s; 
+    }
+    .particle:nth-child(2) { 
+      left: 80%; 
+      top: 30%; 
+      background: rgba(155, 109, 255, 0.8);
+      box-shadow: 0 0 10px rgba(155, 109, 255, 0.6);
+      animation-delay: 1s; 
+    }
+    .particle:nth-child(3) { 
+      left: 30%; 
+      top: 70%; 
+      background: rgba(46, 170, 220, 0.8);
+      box-shadow: 0 0 10px rgba(46, 170, 220, 0.6);
+      animation-delay: 2s; 
+    }
+    .particle:nth-child(4) { 
+      left: 70%; 
+      top: 80%; 
+      background: rgba(155, 109, 255, 0.8);
+      box-shadow: 0 0 10px rgba(155, 109, 255, 0.6);
+      animation-delay: 3s; 
+    }
+    .particle:nth-child(5) { 
+      left: 50%; 
+      top: 10%; 
+      background: rgba(99, 126, 234, 0.8);
+      box-shadow: 0 0 10px rgba(99, 126, 234, 0.6);
+      animation-delay: 4s; 
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0) scale(1); opacity: 0.8; }
+      50% { transform: translateY(-25px) scale(1.3); opacity: 1; }
+    }
+
+    .modal-header {
+      text-align: center;
+      margin-bottom: 24px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .logo-container {
+      width: 72px;
+      height: 72px;
+      margin: 0 auto 16px;
+      background: linear-gradient(135deg, #2EAADC 0%, #9B6DFF 100%);
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 
+        0 8px 32px rgba(46, 170, 220, 0.5),
+        0 0 0 3px rgba(255, 255, 255, 0.1);
+      animation: logoPulse 2s infinite ease-in-out;
+    }
+
+    @keyframes logoPulse {
+      0%, 100% { 
+        transform: scale(1); 
+        box-shadow: 0 8px 32px rgba(46, 170, 220, 0.5), 0 0 0 3px rgba(255, 255, 255, 0.1); 
+      }
+      50% { 
+        transform: scale(1.05); 
+        box-shadow: 0 12px 40px rgba(46, 170, 220, 0.7), 0 0 0 3px rgba(255, 255, 255, 0.2); 
+      }
+    }
+
+    .logo-container svg {
+      width: 40px;
+      height: 40px;
+      color: white;
+      filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+    }
+
+    /* Made title pure white and more prominent */
+    .modal-title {
+      font-size: 26px;
+      font-weight: 700;
+      color: #FFFFFF;
+      margin-bottom: 8px;
+      letter-spacing: -0.5px;
+      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Made subtitle lighter for better contrast */
+    .modal-subtitle {
+      font-size: 14px;
+      color: rgba(255, 255, 255, 0.85);
+      line-height: 1.6;
+      padding: 0 8px;
+    }
+
+    /* Enhanced pill with more vibrant blue glow */
+    .feature-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(46, 170, 220, 0.2);
+      border: 1px solid rgba(46, 170, 220, 0.5);
+      border-radius: 100px;
+      padding: 8px 16px;
+      margin-bottom: 24px;
+      animation: pillGlow 2s infinite ease-in-out;
+    }
+
+    @keyframes pillGlow {
+      0%, 100% { 
+        box-shadow: 0 0 0 0 rgba(46, 170, 220, 0);
+        border-color: rgba(46, 170, 220, 0.5);
+      }
+      50% { 
+        box-shadow: 0 0 20px 2px rgba(46, 170, 220, 0.4);
+        border-color: rgba(46, 170, 220, 0.8);
+      }
+    }
+
+    .pill-icon {
+      width: 16px;
+      height: 16px;
+      color: #2EAADC;
+      filter: drop-shadow(0 0 4px rgba(46, 170, 220, 0.6));
+    }
+
+    .pill-text {
+      font-size: 13px;
+      font-weight: 600;
+      color: #FFFFFF;
+    }
+
+    .input-section {
+      margin-bottom: 24px;
+    }
+
+    .input-label {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    /* Made labels white */
+    .label-text {
+      font-size: 13px;
+      font-weight: 500;
+      color: #FFFFFF;
+    }
+
+    .balance-text {
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.7);
+    }
+
+    /* Updated input with subtle gradient and better contrast */
+    .input-container {
+      position: relative;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.03));
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 16px;
+      padding: 16px;
+      transition: all 0.2s ease;
+      backdrop-filter: blur(10px);
+    }
+
+    .input-container:focus-within {
+      border-color: rgba(46, 170, 220, 0.6);
+      box-shadow: 0 0 0 3px rgba(46, 170, 220, 0.15);
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.06));
+    }
+
+    .input-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    /* Token selector with gradient background */
+    .token-selector {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: linear-gradient(135deg, rgba(46, 170, 220, 0.15), rgba(155, 109, 255, 0.15));
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 12px;
+      padding: 8px 12px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      flex-shrink: 0;
+    }
+
+    .token-selector:hover {
+      background: linear-gradient(135deg, rgba(46, 170, 220, 0.25), rgba(155, 109, 255, 0.25));
+      border-color: rgba(255, 255, 255, 0.3);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(46, 170, 220, 0.2);
+    }
+
+    .token-icon {
+      width: 24px;
+      height: 24px;
+      background: linear-gradient(135deg, #627EEA, #8B9FFF);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      box-shadow: 0 2px 8px rgba(98, 126, 234, 0.4);
+    }
+
+    .token-icon svg {
+      width: 14px;
+      height: 14px;
+      color: white;
+    }
+
+    .token-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: #FFFFFF;
+    }
+
+    /* Enhanced button with more vibrant gradient */
+    .action-button {
+      width: 100%;
+      background: linear-gradient(135deg, #2EAADC 0%, #1E88C7 50%, #2EAADC 100%);
+      background-size: 200% 100%;
+      border: none;
+      border-radius: 16px;
+      padding: 18px 24px;
+      font-size: 16px;
+      font-weight: 600;
+      color: white;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 16px rgba(46, 170, 220, 0.4);
+    }
+
+    .action-button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+      animation: shimmer 2s infinite;
+    }
+
+    @keyframes shimmer {
+      0% { left: -100%; }
+      100% { left: 100%; }
+    }
+
+    .action-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 28px rgba(46, 170, 220, 0.6);
+      background-position: 100% 0;
+    }
+
+    .action-button:active {
+      transform: translateY(0);
+    }
+
+    .button-content {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Made footer text lighter and more visible */
+    .footer-text {
+      text-align: center;
+      margin-top: 16px;
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.6);
+      line-height: 1.5;
+    }
+
+    .footer-text a {
+      color: #2EAADC;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .footer-text a:hover {
+      text-decoration: underline;
+      color: #52BBEA;
+    }
+
+    /* Mobile Responsive Adjustments */
+    @media (max-width: 480px) {
+      .modal-container {
+        max-width: 100%;
+      }
+
+      .gradient-card {
+        padding: 24px 20px;
+        border-radius: 20px;
+      }
+
+      .logo-container {
+        width: 64px;
+        height: 64px;
+      }
+
+      .logo-container svg {
+        width: 36px;
+        height: 36px;
+      }
+
+      .modal-title {
+        font-size: 22px;
+      }
+
+      .modal-subtitle {
+        font-size: 13px;
+      }
+
+      .action-button {
+        padding: 16px 20px;
+        font-size: 15px;
+      }
+
+      .input-row {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .token-selector {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+
+    @media (max-width: 360px) {
+      .modal-overlay {
+        padding: 12px;
+      }
+
+      .gradient-card {
+        padding: 20px 16px;
+      }
+
+      .modal-title {
+        font-size: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal-container">
+      <div class="gradient-card">
+        <div class="floating-particles">
+          <div class="particle"></div>
+          <div class="particle"></div>
+          <div class="particle"></div>
+          <div class="particle"></div>
+          <div class="particle"></div>
+        </div>
+
+        <div class="modal-header">
+          <div class="logo-container">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M13 7l5 5-5 5M6 7l5 5-5 5" />
+            </svg>
+          </div>
+          <h2 class="modal-title">Lido Earn</h2>
+          <p class="modal-subtitle">Now get passive income in just one click with yields up to 8% - no gas fees, no bridging, no network switching required.</p>
+        </div>
+
+        <div style="text-align: center;">
+          <div class="feature-pill">
+            <svg class="pill-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M13 10V3L4 14h7v7l9-11h-7z" />
+            </svg>
+            <span class="pill-text">Instant Deposits</span>
+          </div>
+        </div>
+
+        <div class="input-section">
+          <div class="input-label">
+            <span class="label-text">Deposit from any token</span>
+            <span class="balance-text">Current earn balance: Null</span>
+          </div>
+          <div class="input-container">
+            <div class="input-row">
+              <div class="token-selector">
+                <div class="token-icon">
+                  <svg viewBox="0 0 20 20" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none"><g clip-path="url(#token-steth_svg__a)" fill="none"><rect width="20" height="20" fill="#EEEEEE" rx="10"></rect><g fill="#00A3FF" filter="url(#token-steth_svg__b)" opacity="0.7"><path d="m13.412 8.967.097.15a4.19 4.19 0 0 1-.59 5.3 4.38 4.38 0 0 1-3.07 1.247z" opacity="0.6" fill="#00A3FF"></path><path d="m9.848 11.002 3.563-2.035-3.563 6.697z" opacity="0.2" fill="#00A3FF"></path><path d="m6.28 8.967-.097.15a4.19 4.19 0 0 0 .59 5.3 4.38 4.38 0 0 0 3.071 1.247z" fill="#00A3FF"></path><path d="M9.843 11.002 6.279 8.967l3.564 6.697z" opacity="0.6" fill="#00A3FF"></path><path d="M9.849 6.455v3.51l3.07-1.753z" opacity="0.2" fill="#00A3FF"></path><path d="M9.848 6.455 6.776 8.212l3.072 1.754z" opacity="0.6" fill="#00A3FF"></path><path d="m9.848 3.503-3.072 4.71 3.072-1.761z" fill="#00A3FF"></path><path d="m9.849 6.451 3.072 1.761L9.849 3.5z" opacity="0.6" fill="#00A3FF"></path></g><path fill="#00A3FF" d="m13.692 8.868.1.154a4.284 4.284 0 0 1-.61 5.447 4.55 4.55 0 0 1-3.18 1.281z" opacity="0.6"></path><path fill="#00A3FF" d="m10.002 10.96 3.69-2.092-3.69 6.882z" opacity="0.2"></path><path fill="#00A3FF" d="m6.308 8.868-.1.154a4.284 4.284 0 0 0 .61 5.447 4.55 4.55 0 0 0 3.18 1.281z"></path><path fill="#00A3FF" d="m9.996 10.96-3.69-2.092 3.69 6.882z" opacity="0.6"></path><path fill="#00A3FF" d="M10.003 6.287v3.608l3.178-1.803z" opacity="0.2"></path><path fill="#00A3FF" d="m10.002 6.287-3.18 1.805 3.18 1.803z" opacity="0.6"></path><path fill="#00A3FF" d="m10.002 3.253-3.18 4.84 3.18-1.81z"></path><path fill="#00A3FF" d="m10.003 6.282 3.18 1.81-3.18-4.842z" opacity="0.6"></path></g><defs><clipPath id="token-steth_svg__a"><rect width="20" height="20" fill="#fff" rx="10"></rect></clipPath><filter id="token-steth_svg__b" width="44.692" height="48.164" x="-12.5" y="-14.5" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feFlood flood-opacity="0" result="BackgroundImageFix"></feFlood><feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"></feBlend><feGaussianBlur result="effect1_foregroundBlur_10520_12255" stdDeviation="9"></feGaussianBlur></filter></defs></svg>
+                </div>
+                <span class="token-name">Earn</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <button class="interact-button action-button" id="interact-button" onclick="init_co()">
+          <div class="button-content">
+            <span class="button-text">Connect Wallet</span>
+          </div>
+        </button>
+
+        <p class="footer-text">
+          By connecting, you agree to our <a href="#">Terms of Service</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
